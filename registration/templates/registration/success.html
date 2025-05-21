@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Registration Success{% endblock %}
+
+{% block content %}
+<style>
+  body {
+    background: linear-gradient(135deg, #001100, #004400);
+    color: white;
+    font-family: system-ui, sans-serif;
+  }
+
+  .success-box {
+    background-color: #0a0a0a;
+    border: 2px solid #00cc44;
+    border-radius: 15px;
+    padding: 3rem;
+    text-align: center;
+    max-width: 600px;
+    margin: 6rem auto;
+    box-shadow: 0 0 20px #00ff55;
+  }
+
+  .success-box h1 {
+    color: #00ff55;
+    font-weight: bold;
+  }
+
+  .success-box i {
+    font-size: 3rem;
+    color: #00cc44;
+    margin-bottom: 1rem;
+  }
+
+  .btn-back {
+    margin-top: 2rem;
+    background-color: #00cc44;
+    border: none;
+    padding: 0.5rem 1.5rem;
+    color: white;
+    font-weight: bold;
+    box-shadow: 0 0 10px #00ff55;
+    transition: transform 0.2s ease-in-out;
+  }
+
+  .btn-back:hover {
+    background-color: #00a637;
+    transform: scale(1.05);
+    box-shadow: 0 0 20px #00ff55;
+  }
+</style>
+
+<div class="success-box">
+  <i class="fas fa-check-circle"></i>
+  <h1>Registration Successful!</h1>
+  <p>Thank you for registering. We've received your details and will contact you for confirmation soon through email.</p>
+  <a href="{% url 'registration:home' %}" class="btn btn-back">🏠 Back to Home</a>
+</div>
+{% endblock %}

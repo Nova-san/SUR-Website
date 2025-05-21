@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load static widget_tweaks %}
+
+{% block title %}{{ title }} – SUR{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-6">
+      <div class="card bg-dark border-success shadow-lg">
+        <div class="card-header text-center border-success">
+          <h2 class="text-success">
+            <i class="fas fa-route"></i> {{ title }}
+          </h2>
+        </div>
+        <div class="card-body">
+          <form method="post" class="row g-4">
+            {% csrf_token %}
+            {% for field in form %}
+              <div class="col-md-12">
+                <label class="form-label text-success">{{ field.label }}</label>
+                {{ field|add_class:"form-control bg-secondary text-white border-success" }}
+                {{ field.errors }}
+              </div>
+            {% endfor %}
+            <div class="col-12 text-center">
+              <button type="submit"
+                      class="btn btn-success btn-lg glow px-4">
+                <i class="fas fa-save"></i> Save {{ title }}
+              </button>
+              <a href="{% url 'registration:dashboard' %}"
+                 class="btn btn-outline-light btn-lg glow px-4 ms-2">
+                <i class="fas fa-times"></i> Cancel
+              </a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

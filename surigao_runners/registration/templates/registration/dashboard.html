@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Admin Dashboard – SUR{% endblock %}
+
+{% block content %}
+<style>
+  .dashboard-heading {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    animation: fadeInDown 1s ease-out;
+  }
+
+  .dashboard-heading h2 {
+    color: #00ff55;
+    font-weight: 700;
+    text-shadow: 0 0 10px #00ff55;
+  }
+
+  .card {
+    background-color: #111;
+    border: 1px solid #00ff55;
+    color: #ccffcc;
+    box-shadow: 0 0 10px #00ff55;
+    transition: transform 0.2s ease-in-out, box-shadow 0.3s ease-in-out;
+  }
+
+  .card:hover {
+    transform: scale(1.03);
+    box-shadow: 0 0 20px #00ff55;
+  }
+
+  .card-title {
+    color: #00ff55;
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+
+  .card-text {
+    color: #88ffaa;
+  }
+
+  .btn-glow {
+    background-color: #00ff55;
+    color: #000;
+    font-weight: bold;
+    border: none;
+    box-shadow: 0 0 8px #00ff55;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .btn-glow:hover {
+    transform: scale(1.05);
+    background-color: #00cc44;
+    box-shadow: 0 0 20px #00ff55;
+  }
+
+  .badge-glow {
+  display: inline-block;
+  margin-top: 0.5rem;
+  background: #00ff55;
+  color: #000;
+  font-size: 0.85rem;
+  font-weight: bold;
+  padding: 4px 10px;
+  border-radius: 20px;
+  box-shadow: 0 0 8px #00ff55;
+  animation: neonPulse 2s infinite alternate;
+} 
+
+  @keyframes fadeInDown {
+    from {
+      opacity: 0;
+      transform: translateY(-30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+
+<div class="container my-5">
+  <div class="dashboard-heading">
+    <h2><i class="fas fa-tools"></i> Admin Dashboard</h2>
+    <p class="text-muted">🛡️ Select a task below to manage events and runners.</p>
+  </div>
+
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    {% for feature in features %}
+      <div class="col">
+        <div class="card h-100 d-flex flex-column">
+          <div class="card-body text-center">
+            <i class="fas {{ feature.icon }} fa-2x mb-3 text-success"></i>
+            <h5 class="card-title">{{ feature.name }}</h5>
+            <p class="card-text">{{ feature.desc }}</p>
+            {% if feature.count is not None %}
+            <span class="badge-glow">🧮 {{ feature.count }} Pending</span>
+            {% endif %}
+          </div>
+          <div class="card-footer bg-transparent border-0 mt-auto">
+            <a href="{{ feature.url }}" class="btn btn-glow w-100">Go <i class="fas fa-arrow-right"></i></a>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
