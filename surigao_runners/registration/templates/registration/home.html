@@ -1,0 +1,186 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Surigao Ultra Runners</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Fonts & Styles -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      font-family: 'Orbitron', sans-serif;
+      background: linear-gradient(to bottom right, #000000, #001a00);
+      color: #ccffcc;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 4rem 1rem 3rem;
+      background: linear-gradient(135deg, #000000, #002200);
+    }
+
+    .logo-img {
+      max-width: 150px;
+      filter: drop-shadow(0 0 6px #00ff55);
+    }
+
+    .hero h1 {
+      font-weight: 700;
+      color: #00ff55;
+      margin-top: 1rem;
+    }
+
+    .hero p {
+      color: #66ff99;
+      font-size: 1.1rem;
+      margin-top: 1rem;
+    }
+
+    .btn-glow {
+      background: #00ff55;
+      color: #000;
+      border: none;
+      box-shadow: 0 0 10px #00ff55;
+      transition: all 0.2s ease-in-out;
+      font-weight: bold;
+    }
+
+    .btn-glow:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px #00ff55;
+      background: #00cc44;
+    }
+
+    .btn-outline-light:hover {
+      color: #000;
+      background: #66ff99;
+    }
+
+    .event-section {
+      background-color: #0a0a0a;
+      padding: 3rem 1rem;
+      border-top: 2px solid #00ff55;
+    }
+
+    .event-card {
+      background-color: #1a1a1a;
+      border: 1px solid #00ff55;
+      border-radius: 10px;
+      padding: 1rem;
+      color: #ccffcc;
+      box-shadow: 0 0 8px #00ff55;
+      transition: transform 0.2s ease;
+    }
+
+    .event-card:hover {
+      transform: scale(1.02);
+      box-shadow: 0 0 20px #00ff55;
+    }
+
+    .about-section {
+      background-color: #000;
+      color: #99ffbb;
+      padding: 3rem 1rem;
+      border-top: 2px solid #00ff55;
+    }
+
+    footer {
+      background: #000;
+      color: #66ff99;
+      text-align: center;
+      padding: 1.2rem 0;
+      border-top: 2px solid #00ff55;
+    }
+
+    footer a {
+      color: #00ff55;
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      color: #39ff14;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <img src="{% static 'registration/sur_logo.png' %}" alt="SUR Logo" class="logo-img mb-3">
+    <h1>🏃‍♂️ Surigao Ultra Runners</h1>
+    <p>Pushing limits, one race at a time.<br>Join the community. Make your stride count.</p>
+    <div class="mt-4">
+      <a href="{% url 'registration:register' %}" class="btn btn-glow me-3">Register Now</a>
+      <a href="{% url 'registration:admin_login' %}" class="btn btn-outline-light">
+        <i class="fas fa-user-shield"></i> Admin Login
+      </a>
+    </div>
+  </section>
+
+  <!-- Upcoming Events -->
+  <section class="event-section text-center">
+    <div class="container">
+      <h2 class="text-success mb-4">Upcoming Events</h2>
+      <div class="row justify-content-center">
+        {% for event in events %}
+        <div class="col-md-4 mb-4">
+          <div class="event-card h-100">
+            {% if event.poster %}
+            <img src="{{ event.poster.url }}" alt="{{ event.name }}" class="img-fluid mb-3 rounded">
+            {% endif %}
+            <h5 class="fw-bold text-success">{{ event.name }}</h5>
+            <p><strong>Date:</strong> {{ event.date }}</p>
+            <div class="text-start mb-2">
+              <strong>Distances:</strong>
+              <ul class="list-unstyled mb-0">
+                {% for d in event.distances.all %}
+                  <li>{{ d.label }}{% if d.fee %} – ₱{{ d.fee }}{% endif %}</li>
+                {% endfor %}
+              </ul>
+            </div>
+            <p class="small text-muted">{{ event.description|default:"No description provided." }}</p>
+          </div>
+        </div>
+        {% empty %}
+        <p class="text-light">No upcoming events at the moment.</p>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section class="about-section text-center">
+    <div class="container">
+      <h2 class="text-success mb-3">About Us</h2>
+      <p class="lead">
+        <strong>Surigao Ultra Runners</strong>, established in 2016, is a passionate running group from Surigao City.  
+        We celebrate endurance, wellness, and the electric rush of every finish line.
+      </p>
+      <p class="mt-3">
+        💡 Whether you’re lacing up for your first run or dominating marathons,  
+        there’s a space for you in our neon-lit finish zone.
+      </p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p class="mb-1">&copy; 2025 <strong class="text-success">Surigao Ultra Runners</strong>. All rights reserved.</p>
+    <p class="mb-0">
+      Follow us on
+      <a href="https://www.facebook.com/SurigaoUltraRunnersSUR" target="_blank">
+        <i class="fab fa-facebook-f"></i> Facebook
+      </a>
+    </p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

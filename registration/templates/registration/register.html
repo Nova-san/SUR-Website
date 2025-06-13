@@ -1,0 +1,165 @@
+{% load static widget_tweaks %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Surigao Ultra Runners – Register</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap & Font Awesome -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+
+  <style>
+  html, body {
+    height: 100%;
+    margin: 0;
+    font-family: 'Orbitron', system-ui, sans-serif;
+    background: linear-gradient(135deg, #000000, #002200);
+    color: #00ff88;
+  }
+
+  .registration-box {
+    background: #0a0a0a;
+    border: 2px solid #00ff55;
+    border-radius: 20px;
+    padding: 2.5rem;
+    max-width: 800px;
+    width: 100%;
+    box-shadow: 0 0 30px #00ff88aa;
+    margin: 4rem auto;
+  }
+
+  h2, label {
+    color: #00ff88;
+    font-weight: bold;
+  }
+
+  .form-control, .form-select {
+    background: #111;
+    color: #00ff88;
+    border: 1px solid #00ff55;
+    border-radius: 8px;
+    transition: 0.2s ease;
+  }
+
+  .form-control:focus, .form-select:focus {
+    border-color: #00ff88;
+    box-shadow: 0 0 10px #00ff88;
+    outline: none;
+  }
+
+  .btn-submit {
+    background: #00ff55;
+    color: #0a0a0a;
+    font-weight: bold;
+    border-radius: 8px;
+    box-shadow: 0 0 15px #00ff88;
+    padding: 0.75rem 2rem;
+    transition: all 0.3s ease-in-out;
+  }
+
+  .btn-submit:hover {
+    background: #00dd44;
+    transform: scale(1.05);
+    box-shadow: 0 0 25px #00ff88;
+  }
+</style>
+
+</head>
+<body>
+  <div class="registration-box">
+    <h2 class="text-center text-success">
+      <i class="fas fa-running me-2"></i>Runner Registration
+    </h2>
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label for="{{ form.event.id_for_label }}" class="form-label">Event</label>
+          {{ form.event|add_class:"form-select" }}
+        </div>
+        <div class="col-md-6"></div>
+          <label for="{{ form.distance.id_for_label }}" class="form-label">Distance</label>
+          {{ form.distance|add_class:"form-select" }}
+          {% if form.distance.errors %}
+            <div class="text-danger small mt-1">{{ form.distance.errors.0 }}</div>
+          {% endif %}
+        </div>
+        <div class="col-md-6">
+          <label for="{{ form.first_name.id_for_label }}" class="form-label">First Name with Middle Initial (if any)</label>
+          <span class="text-muted small">e.g. John D.</span>
+          {{ form.first_name|add_class:"form-control" }}
+        </div>
+        <div class="col-md-6">
+          <label for="{{ form.last_name.id_for_label }}" class="form-label">Last Name</label>
+          {{ form.last_name|add_class:"form-control" }}
+        </div>
+        <div class="col-md-4">
+          <label for="{{ form.email.id_for_label }}" class="form-label">Email</label>
+          {{ form.email|add_class:"form-control" }}
+        </div>
+        <div class="col-md-4">
+          <label for="{{ form.contact_number.id_for_label }}" class="form-label">Contact Number</label>
+          {{ form.contact_number|add_class:"form-control" }}
+        </div>
+
+        <div class="col-md-4">
+          <label for="{{ form.age.id_for_label }}" class="form-label">Age</label>
+          {{ form.age|add_class:"form-control" }}
+        </div>
+        <div class="col-md-4">
+          <label for="{{ form.gender.id_for_label }}" class="form-label">Gender</label>
+          {{ form.gender|add_class:"form-select" }}
+        </div>
+        <div class="col-md-4">
+          <label for="{{ form.shirt_size.id_for_label }}" class="form-label">Shirt Size</label>
+          {{ form.shirt_size|add_class:"form-select" }}
+        </div>
+
+        <div class="col-md-6">
+          <label for="{{ form.emergency_contact_name.id_for_label }}" class="form-label">Emergency Contact Name</label>
+          {{ form.emergency_contact_name|add_class:"form-control" }}
+        </div>
+        <div class="col-md-6">
+          <label for="{{ form.emergency_contact_number.id_for_label }}" class="form-label">Emergency Contact Number</label>
+          {{ form.emergency_contact_number|add_class:"form-control" }}
+        </div>
+
+        <div class="col-12">
+          <label for="{{ form.proof_of_payment.id_for_label }}" class="form-label">Proof of Payment</label>
+          {{ form.proof_of_payment|add_class:"form-control" }}
+        </div>
+      </div>
+
+      <div class="text-center mt-4">
+        <button type="submit" class="btn btn-lg btn-submit px-4">
+          <i class="fas fa-paper-plane me-2"></i>Submit Registration
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    $(function() {
+      $('#id_event').change(function() {
+        var eventId = $(this).val();
+        $.ajax({
+          url: "{% url 'registration:ajax_load_distances' %}",
+          data: { event_id: eventId },
+          success: function(data) {
+            var $dist = $('#id_distance').empty().append('<option value="">Select a distance</option>');
+            data.forEach(function(item) {
+              $dist.append('<option value="'+item.id+'">'+
+                item.label + (item.fee ? ' – ₱'+item.fee : '') + '</option>');
+            });
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% load static widget_tweaks %}
+
+{% block content %}
+<div class="container py-5 text-light">
+  <h2 class="text-success mb-4">
+    <i class="fas fa-file-excel"></i> Export Runners to XLSX
+  </h2>
+
+  <form method="get" class="row g-3">
+    <div class="col-md-4">
+      <label class="form-label text-success">Event</label>
+      {{ form.event|add_class:"form-select bg-dark text-light border-success"|attr:"id:id_event" }}
+    </div>
+    <div class="col-md-4">
+      <label class="form-label text-success">Distance</label>
+      {{ form.distance|add_class:"form-select bg-dark text-light border-success"|attr:"id:id_distance" }}
+    </div>
+    <div class="col-md-4">
+      <label class="form-label text-success">Shirt Size</label>
+      {{ form.shirt_size|add_class:"form-select bg-dark text-light border-success" }}
+    </div>
+    <div class="col-md-4">
+      <label class="form-label text-success">Gender</label>
+      {{ form.gender|add_class:"form-select bg-dark text-light border-success" }}
+    </div>
+    <div class="col-md-4">
+      <label class="form-label text-success">Verified?</label>
+      {{ form.is_verified|add_class:"form-select bg-dark text-light border-success" }}
+    </div>
+    <div class="col-md-4">
+      <label class="form-label text-success">Age Category</label>
+      {{ form.age_category|add_class:"form-select bg-dark text-light border-success" }}
+    </div>
+
+    <div class="col-12 mt-3">
+      <button type="submit" class="btn btn-success">
+        <i class="fas fa-download"></i> Download XLSX
+      </button>
+      <a href="{% url 'registration:dashboard' %}" class="btn btn-outline-light ms-2">Back</a>
+    </div>
+  </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(function() {
+    $('#id_event').change(function() {
+      const eventId = $(this).val();
+      $.ajax({
+        url: "{% url 'registration:ajax_load_distances' %}",
+        data: { 'event_id': eventId },
+        success: function(data) {
+          let options = '<option value="">Select a distance</option>';
+          data.forEach(function(item) {
+            const fee = item.fee ? ` – ₱${item.fee}` : '';
+            options += `<option value="${item.id}">${item.label}${fee}</option>`;
+          });
+          $('#id_distance').html(options);
+        }
+      });
+    });
+  });
+</script>
+{% endblock %}

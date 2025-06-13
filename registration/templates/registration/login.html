@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% load static widget_tweaks %}
+
+{% block title %}Admin Login – SUR{% endblock %}
+
+{% block content %}
+<style>
+  @keyframes neonPulse {
+    0%   { box-shadow: 0 0 10px #00ff55, 0 0 20px #00ff55; }
+    100% { box-shadow: 0 0 20px #00ff55, 0 0 30px #00ff55; }
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  body {
+    background: linear-gradient(135deg, #000000, #001a00);
+    color: #ccffcc;
+    font-family: 'Orbitron', sans-serif;
+    letter-spacing: 0.5px;
+  }
+
+  .login-outer {
+    min-height: calc(100vh - 160px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .login-box {
+    background: #0b0b0b;
+    border: 2px solid #00ff55;
+    border-radius: 18px;
+    padding: 2.5rem;
+    width: 100%;
+    max-width: 420px;
+    text-align: center;
+    animation: neonPulse 2s infinite alternate, fadeInUp 1s ease-out;
+  }
+
+  .login-box img {
+    width: 85px;
+    filter: drop-shadow(0 0 10px #00ff55);
+  }
+
+  .login-box h2 {
+    color: #00ff55;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+
+  .tagline {
+    color: #66ff99;
+    font-size: 0.9rem;
+    font-style: italic;
+    margin-bottom: 1.5rem;
+  }
+
+  .form-control {
+    background: #121212;
+    color: #00ff55;
+    border: 1px solid #00ff55;
+    margin-bottom: 1rem;
+    transition: border 0.3s ease;
+  }
+
+  .form-control:focus {
+    border-color: #39ff14;
+    box-shadow: 0 0 8px #39ff14;
+  }
+
+  .btn-login {
+    background: #00ff55;
+    color: #000;
+    font-weight: bold;
+    border: none;
+    box-shadow: 0 0 10px #00ff55;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .btn-login:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px #00ff55;
+  }
+</style>
+
+<!-- Orbitron: Cyberpunk Font -->
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+
+<div class="login-outer">
+  <div class="login-box">
+    <img src="{% static 'registration/sur_logo.png' %}" alt="SUR Logo" class="mb-3">
+    <h2><i class="fas fa-user-shield"></i> Admin Login</h2>
+    <p class="tagline">🛡️ System Access – Authorized Users Only</p>
+    <form method="post">
+      {% csrf_token %}
+      {{ form.username|add_class:"form-control" }}
+      {{ form.password|add_class:"form-control" }}
+      <button type="submit" class="btn btn-login w-100">Log In</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

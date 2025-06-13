@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ title }} – SUR{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <h2 class="text-success mb-4">
+    <i class="fas fa-chart-pie"></i> {{ title }}
+  </h2>
+
+  <div class="row mb-5">
+    <div class="col-md-4">
+      <div class="card bg-dark text-white shadow-sm">
+        <div class="card-body text-center">
+          <h5>Total Registrations</h5>
+          <h2>{{ total }}</h2>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card bg-dark text-white shadow-sm">
+        <div class="card-body text-center">
+          <h5>Verified</h5>
+          <h2>{{ verified }}</h2>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card bg-dark text-white shadow-sm">
+        <div class="card-body text-center">
+          <h5>Unverified</h5>
+          <h2>{{ unverified }}</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h4 class="text-success mb-3">By Event</h4>
+  <div class="table-responsive">
+    <table class="table table-dark table-striped">
+      <thead>
+        <tr>
+          <th>Event</th>
+          <th>Total</th>
+          <th>Verified</th>
+          <th>% Verified</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in stats %}
+        <tr>
+          <td>{{ row.event }}</td>
+          <td>{{ row.total }}</td>
+          <td>{{ row.verified }}</td>
+          <td>{{ row.percent }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="mt-4">
+    <a href="{% url 'registration:dashboard' %}"
+       class="btn btn-outline-light">
+      <i class="fas fa-arrow-left"></i> Back to Dashboard
+    </a>
+  </div>
+</div>
+{% endblock %}

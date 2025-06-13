@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}{{ title }} – SUR{% endblock %}
+{% block content %}
+<div class="container py-5 text-center">
+  <h2 class="text-danger mb-4"><i class="fas fa-exclamation-triangle"></i> {{ title }}</h2>
+  <p>Are you sure you want to delete <strong>{{ object.name }}</strong> scheduled on <strong>{{ object.date }}</strong>?</p>
+  <form method="post" class="d-inline">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger glow px-4">
+      <i class="fas fa-trash"></i> Yes, delete
+    </button>
+  </form>
+  <a href="{% url 'registration:current_events' %}"
+     class="btn btn-outline-light glow px-4 ms-2">
+    <i class="fas fa-times"></i> Cancel
+  </a>
+</div>
+{% endblock %}

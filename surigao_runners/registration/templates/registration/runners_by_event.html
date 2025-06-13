@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+{% load static widget_tweaks %}
+
+{% block title %}{{ title }} – SUR{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <h2 class="text-success mb-4">
+    <i class="fas fa-calendar-week"></i> {{ title }}
+  </h2>
+
+  <form method="get" class="row g-3 mb-4">
+    <div class="col-md-4">
+      <label class="form-label text-success">{{ form.event.label }}</label>
+      {{ form.event|add_class:"form-select bg-secondary text-white border-success" }}
+    </div>
+    <div class="col-md-4">
+      <label class="form-label text-success">{{ form.search.label }}</label>
+      {{ form.search|add_class:"form-control bg-secondary text-white border-success" }}
+    </div>
+    <div class="col-md-4">
+      <label class="form-label text-success">{{ form.distance.label }}</label>
+      {{ form.distance|add_class:"form-select bg-secondary text-white border-success" }}
+    </div>
+    <div class="col-md-4">
+      <label class="form-label text-success">{{ form.shirt_size.label }}</label>
+      {{ form.shirt_size|add_class:"form-select bg-secondary text-white border-success" }}
+    </div>
+    <div class="col-md-4">
+      <label class="form-label text-success">{{ form.gender.label }}</label>
+      {{ form.gender|add_class:"form-select bg-secondary text-white border-success" }}
+    </div>
+    <div class="col-md-4">
+      <label class="form-label text-success">{{ form.is_verified.label }}</label>
+      {{ form.is_verified|add_class:"form-select bg-secondary text-white border-success" }}
+    </div>
+    <div class="col-md-4">
+      <label class="form-label text-success">{{ form.age_category.label }}</label>
+      {{ form.age_category|add_class:"form-select bg-secondary text-white border-success" }}
+    </div>
+    <div class="col-md-12 text-center mt-2">
+      <button type="submit" class="btn btn-success glow me-2">
+        <i class="fas fa-search"></i> Apply Filters
+      </button>
+      <a href="{% url 'registration:dashboard' %}" class="btn btn-outline-light glow">
+        <i class="fas fa-arrow-left"></i> Back
+      </a>
+    </div>
+  </form>
+
+  {% if runners %}
+    <div class="table-responsive">
+      <table class="table table-dark table-striped align-middle">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Distance</th>
+            <th>Verified?</th>
+            <th>Proof</th>
+            <th class="text-center">Manage</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for r in runners %}
+          <tr>
+            <td>{{ r.full_name }}</td>
+            <td>{{ r.email }}</td>
+            <td>{{ r.distance.label }}</td>
+            <td>{{ r.is_verified|yesno:"✅,❌" }}</td>
+            <td>
+              {% if r.proof_of_payment %}
+              <a href="{{ r.proof_of_payment.url }}" target="_blank">
+                <img src="{{ r.proof_of_payment.url }}"
+                     alt="Proof"
+                     width="80"
+                     class="img-thumbnail">
+              </a>
+              {% else %}—{% endif %}
+            </td>
+            <td class="text-center">
+              <div class="d-flex justify-content-center gap-2">
+                <a href="{% url 'registration:edit_runner' r.pk %}" class="btn btn-sm btn-success glow">
+                  <i class="fas fa-edit"></i> Edit
+                </a>
+                <form method="post" action="{% url 'registration:delete_runner' r.pk %}" class="d-inline mb-0">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-sm btn-danger glow"
+                          onclick="return confirm('⚠️ Are you sure you want to permanently delete {{ r.full_name }}? This cannot be undone.');">
+                    <i class="fas fa-trash-alt"></i> Delete
+                  </button>
+                </form>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    {% if runners.has_other_pages %}
+    <nav class="mt-4">
+      <ul class="pagination justify-content-center">
+        {% if runners.has_previous %}
+          <li class="page-item">
+            <a class="page-link bg-dark text-success" href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value|urlencode }}&{% endif %}{% endfor %}page={{ runners.previous_page_number }}">Previous</a>
+          </li>
+        {% else %}
+          <li class="page-item disabled">
+            <span class="page-link bg-dark text-muted">Previous</span>
+          </li>
+        {% endif %}
+
+        {% for num in runners.paginator.page_range %}
+          {% if runners.number == num %}
+            <li class="page-item active">
+              <span class="page-link bg-success text-dark">{{ num }}</span>
+            </li>
+          {% else %}
+            <li class="page-item">
+              <a class="page-link bg-dark text-success" href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value|urlencode }}&{% endif %}{% endfor %}page={{ num }}">{{ num }}</a>
+            </li>
+          {% endif %}
+        {% endfor %}
+
+        {% if runners.has_next %}
+          <li class="page-item">
+            <a class="page-link bg-dark text-success" href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value|urlencode }}&{% endif %}{% endfor %}page={{ runners.next_page_number }}">Next</a>
+          </li>
+        {% else %}
+          <li class="page-item disabled">
+            <span class="page-link bg-dark text-muted">Next</span>
+          </li>
+        {% endif %}
+      </ul>
+    </nav>
+    {% endif %}
+  {% elif selected_event %}
+    <p class="text-light mt-4">
+      No runners registered for <strong>{{ selected_event.name }}</strong>.
+    </p>
+  {% endif %}
+</div>
+{% endblock %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(function() {
+    $('#id_event').change(function() {
+      var eventId = $(this).val();
+      $.ajax({
+        url: "{% url 'registration:ajax_load_distances' %}",
+        data: {
+          event_id: eventId
+        },
+        success: function(data) {
+          var $dist = $('#id_distance');
+          $dist.empty().append('<option value="">Select a distance</option>');
+          data.forEach(function(item) {
+            $dist.append('<option value="' + item.id + '">' +
+              item.label + (item.fee ? ' – ₱' + item.fee : '') + '</option>');
+          });
+        }
+      });
+    });
+  });
+</script>
+

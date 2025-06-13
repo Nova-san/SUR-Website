@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% load static widget_tweaks %}
+
+{% block title %}{{ title }} – SUR{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card bg-dark border-success shadow-lg">
+        <div class="card-header text-center border-success">
+          <h2 class="text-success">
+            <i class="fas fa-calendar-plus"></i>
+            {{ title }}
+          </h2>
+        </div>
+        <div class="card-body">
+          <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="row g-4">
+              
+              {# Show current poster on Edit #}
+              {% if title == "Edit Event" and form.instance.poster %}
+              <div class="col-12 text-center">
+                <img src="{{ form.instance.poster.url }}"
+                     alt="Current Poster"
+                     class="img-thumbnail mb-3"
+                     style="max-width:200px;">
+              </div>
+              {% endif %}
+
+              <div class="col-md-6">
+                <label for="{{ form.name.id_for_label }}" class="form-label text-success">
+                  Name
+                </label>
+                {{ form.name|add_class:"form-control bg-secondary text-white border-success" }}
+                {{ form.name.errors }}
+              </div>
+
+              <div class="col-md-6">
+                <label for="{{ form.date.id_for_label }}" class="form-label text-success">
+                  Date
+                </label>
+                {{ form.date|add_class:"form-control bg-secondary text-white border-success" }}
+                {{ form.date.errors }}
+              </div>
+
+              <div class="col-md-6">
+                <label for="{{ form.poster.id_for_label }}" class="form-label text-success">
+                  Poster
+                </label>
+                {{ form.poster|add_class:"form-control bg-secondary text-white border-success" }}
+                {{ form.poster.errors }}
+              </div>
+
+              <div class="col-md-6">
+                <label for="{{ form.description.id_for_label }}" class="form-label text-success">
+                  Description
+                </label>
+                {{ form.description|add_class:"form-control bg-secondary text-white border-success" }}
+                {{ form.description.errors }}
+              </div>
+
+              <div class="col-12 text-center">
+                <button type="submit"
+                        class="btn btn-success btn-lg glow px-4">
+                  <i class="fas fa-save"></i>
+                  {{ title }}
+                </button>
+                <a href="{% url 'registration:dashboard' %}"
+                   class="btn btn-outline-light btn-lg glow px-4 ms-2">
+                  <i class="fas fa-times"></i>
+                  Cancel
+                </a>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
