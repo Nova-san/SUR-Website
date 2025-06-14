@@ -12,7 +12,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY SETTINGS
 SECRET_KEY = os.getenv('SECRET_KEY')
 
-DEBUG = os.getenv("DEBUG", "False") == "True"
+DEBUG = os.getenv("DEBUG", "False").strip().lower() == "true"
 
 
 # ✅ Allow all local requests
