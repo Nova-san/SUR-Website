@@ -12,6 +12,3 @@ services:
         value: surigao_runners.settings
       - key: PYTHON_VERSION
         value: 3.12
-      # Optional if you prefer to prefill (not recommended for secrets)
-      # - key: SECRET_KEY
-      #   value: your-secret-key
