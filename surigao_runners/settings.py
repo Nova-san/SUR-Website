@@ -12,14 +12,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY SETTINGS
 SECRET_KEY = os.getenv('SECRET_KEY')
 
-DEBUG = True
+DEBUG = os.getenv("DEBUG", "False") == "True"
+
 
 # ✅ Allow all local requests
 ALLOWED_HOSTS = [host.strip() for host in os.getenv('ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')]
 print(f"ALLOWED_HOSTS: {ALLOWED_HOSTS}")  # Debugging line to check allowed hosts
-
-# DEBUG = os.getenv('DEBUG', 'False') == 'True'
-# ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
 
 # INSTALLED APPS
 INSTALLED_APPS = [
