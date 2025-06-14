@@ -10,12 +10,13 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY SETTINGS
-SECRET_KEY = 'k9i)p_5$g+_wynd5=0c%a(w9&*0%gj&^_85g0a#tqoabk34o_$'
-DEBUG = True
+SECRET_KEY = os.getenv('SECRET_KEY')
+
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 # ✅ Allow all local requests
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
-
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '127.0.0.1,localhost').split(',')
+print("✅ Loaded ALLOWED_HOSTS:", ALLOWED_HOSTS)
 
 
 # DEBUG = os.getenv('DEBUG', 'False') == 'True'
